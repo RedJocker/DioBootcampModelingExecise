@@ -5,7 +5,6 @@ import model.content.Course;
 import model.content.Mentorship;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
@@ -25,13 +24,26 @@ public class Main {
         final LinkedHashSet<Content> contents = Stream.of(course, typesVsClasses)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
+        final Dev dev = new Dev("Mr. Yes");
+        System.out.println(dev);
+
         final Bootcamp bootcamp = new Bootcamp(
                 "Bootcamp Domain Driven Java",
                 "Dominating the complexity of your domain",
-                new HashSet<Dev>(),
+                new HashSet<>(),
                 contents
         );
 
         System.out.println(bootcamp);
+
+        bootcamp.subscribe(dev);
+        dev.nextContent()
+            .ifPresentOrElse(
+                dev::completeContent,
+                () -> System.out.println(
+                    "Congratulations, you finished all subscribed content\n.Subscribe to more to continue learning."
+                )
+            );
+        System.out.println(bootcamp.subscribedDevs());
     }
 }
