@@ -1,0 +1,4 @@
+rootProject.name = 'JavaKotlinBootcamp'
+include 'javaBootcamp'
+include 'kotlinBootcamp'
+

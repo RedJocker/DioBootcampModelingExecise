@@ -1,0 +1,20 @@
+# ignore macOs os files
+**/.DS_Store
+
+# ignore emacs temporary files
+*~
+\#*\#
+.\#*
+
+# ignore build files
+**/build
+
+# ignore gradle
+**/gradle
+**/.gradle
+gradlew
+gradlew.bat
+**/gradle/wrapper
+
+# ignore intelliJ
+**/.idea
