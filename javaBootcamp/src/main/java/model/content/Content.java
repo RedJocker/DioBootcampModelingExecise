@@ -20,4 +20,15 @@ public abstract class Content {
     public String getDescription() {
         return this.description;
     }
+
+    protected String wrappedDescriptionLine(String descriptionLineWithFirstCharOfNext, int lineBreak) {
+        final String d = descriptionLineWithFirstCharOfNext;
+
+        final int lastIndex = Math.min(d.length(), lineBreak);
+        final boolean shouldPutWrapSign = lastIndex == lineBreak
+                && Character.isLetter(d.charAt(lineBreak - 1))
+                && Character.isLetter(d.charAt(lineBreak));
+
+        return String.format("| %-75s%s |\n", d.substring(0, lastIndex).trim(),  shouldPutWrapSign ? "-" : " ");
+    }
 }

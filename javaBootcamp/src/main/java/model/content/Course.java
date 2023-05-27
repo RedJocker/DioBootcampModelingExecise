@@ -20,7 +20,6 @@ public class Course extends Content  {
     @Override
     public String toString() {
         final int descLength = getDescription().length();
-        char a = 'a';
         final int lineBreak = 75;
         final String fmt =
                 "================================================================================\n" +
@@ -36,16 +35,5 @@ public class Course extends Content  {
                 ;
 
         return String.format(fmt, getTitle(), totalHours, xpAwarded());
-    }
-
-    private String wrappedDescriptionLine(String descriptionLineWithFirstCharOfNext, int lineBreak) {
-        final String d = descriptionLineWithFirstCharOfNext;
-
-        final int lastIndex = Math.min(d.length(), lineBreak);
-        final boolean shouldPutWrapSign = lastIndex == lineBreak
-                && Character.isLetter(d.charAt(lineBreak - 1))
-                && Character.isLetter(d.charAt(lineBreak));
-
-        return String.format("| %-75s%s |\n", d.substring(0, lastIndex).trim(),  shouldPutWrapSign ? "-" : " ");
     }
 }
