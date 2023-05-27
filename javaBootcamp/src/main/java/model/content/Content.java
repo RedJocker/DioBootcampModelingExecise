@@ -1,4 +1,4 @@
-package model;
+package model.content;
 
 public abstract class Content {
     public static double DEFAULT_XP = 10.00;
@@ -11,7 +11,7 @@ public abstract class Content {
         this.description = description;                 
     }
 
-    public abstract double getXp();
+    public abstract double xpAwarded();
 
     public String getTitle() {
         return this.title;
