@@ -1,3 +1,4 @@
+import model.Dev;
 import model.content.Content;
 import model.content.Course;
 import model.content.Mentorship;
@@ -82,6 +83,48 @@ class BootcampTest {
                 20 + Content.DEFAULT_XP,
                 content.xpAwarded(),
                 "xpAwarded expected to be the sum of 'default xp' with 20"
+        );
+    }
+
+    @Test
+    void testDev() {
+        final Course course = new Course("JavaOO", "Object Orient java", 20);
+
+        final Mentorship mentorship = new Mentorship(
+                "Types vs Classes",
+                "A domain modeling comparative approach between Haskell and Java",
+                LocalDateTime.now()
+        );
+
+        final Dev dev = new Dev("Mr. Yes");
+
+        double devInitialXp = dev.getXp();
+        assertEquals(0.0, devInitialXp, "dev initial xp should be 0.0");
+
+        dev.subscribeContent(course);
+        dev.subscribeContent(mentorship);
+
+        final Content actualFirstContent = dev.nextContent().orElse(null);
+        final String messageNextContent = "nextContent should retrieve subscriptions in order of subscription";
+        assertEquals(course, actualFirstContent, messageNextContent);
+
+        dev.completeContent(actualFirstContent);
+        double devXpAfterCourse = dev.getXp();
+        double expectedXpAfterCourse = course.xpAwarded();
+        assertEquals(expectedXpAfterCourse, devXpAfterCourse,
+    "after just course complete dev xp should match the completed course"
+        );
+
+        final Content actualSecondContent = dev.nextContent().orElse(null);
+        final String messageSecondContent =
+                "After completing the first content nextContent should retrieve the second subscribed content";
+        assertEquals(mentorship, actualSecondContent, messageSecondContent);
+
+        dev.completeContent(actualSecondContent);
+        double devXpAfterCourseAndMentorship = dev.getXp();
+        double expectedXpAfterCourseAndMentorship = course.xpAwarded() + mentorship.xpAwarded();
+        assertEquals(expectedXpAfterCourseAndMentorship, devXpAfterCourseAndMentorship,
+                "after just course and mentorship complete dev xp should match the sum of both course and mentorship xp"
         );
     }
 }
