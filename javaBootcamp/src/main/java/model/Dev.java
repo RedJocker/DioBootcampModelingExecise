@@ -26,7 +26,9 @@ public class Dev {
     }
 
     public void subscribeContent(Content content) {
-        subscribedContent.add(content);
+        if(!completedContent.contains(content)) {
+            subscribedContent.add(content);
+        }
     }
 
     public void unsubscribeContent(Content content) {
