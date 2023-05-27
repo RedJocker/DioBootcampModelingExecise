@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BootcampTest {
 
@@ -126,5 +127,19 @@ class BootcampTest {
         assertEquals(expectedXpAfterCourseAndMentorship, devXpAfterCourseAndMentorship,
                 "after just course and mentorship complete dev xp should match the sum of both course and mentorship xp"
         );
+
+        dev.subscribeContent(course);
+
+        final Content shouldBeNull = dev.nextContent().orElse(null);
+        final String messageShouldBeNull =
+                "When the list of subscriptions is empty and an already complete content is subscribed then this content" +
+                        "should not be added to the subscription and nextContent should return empty";
+        assertNull(shouldBeNull, messageShouldBeNull);
+
+    }
+
+    @Test
+    void testBootcamp() {
+
     }
 }
