@@ -1,11 +1,17 @@
 import model.Dev;
+import model.content.Bootcamp;
 import model.content.Content;
 import model.content.Course;
 import model.content.Mentorship;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static model.content.Content.DEFAULT_XP;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -18,7 +24,7 @@ class BootcampTest {
         final Content content = new Content(testTitle, testDescription) {
             @Override
             public double xpAwarded() {
-                return Content.DEFAULT_XP;
+                return DEFAULT_XP;
             }
         };
 
@@ -55,7 +61,7 @@ class BootcampTest {
         );
 
         assertEquals(
-                testTotalHours * Content.DEFAULT_XP,
+                testTotalHours * DEFAULT_XP,
                 content.xpAwarded(),
                 "xpAwarded expected to be the product of 'total hours' with 'default xp'"
         );
@@ -81,7 +87,7 @@ class BootcampTest {
         );
 
         assertEquals(
-                20 + Content.DEFAULT_XP,
+                20 + DEFAULT_XP,
                 content.xpAwarded(),
                 "xpAwarded expected to be the sum of 'default xp' with 20"
         );
@@ -140,6 +146,56 @@ class BootcampTest {
 
     @Test
     void testBootcamp() {
+        final Course course = new Course("JavaOO", "Object Orient java", 20);
 
+        final Mentorship mentorship = new Mentorship(
+                "Types vs Classes",
+                "A domain modeling comparative approach between Haskell and Java",
+                LocalDateTime.now()
+        );
+
+        final LinkedHashSet<Content> contents = Stream.of(course, mentorship)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        final Dev dev = new Dev("Mr. Yes");
+
+        final Bootcamp bootcamp = new Bootcamp(
+                "Bootcamp Domain Driven Java",
+                "Dominating the complexity of your domain",
+                new HashSet<>(),
+                contents
+        );
+
+        final String expectedSubscribedEmpty = "";
+        final String actualSubscribedEmpty = bootcamp.subscribedDevs();
+        assertEquals(expectedSubscribedEmpty, actualSubscribedEmpty);
+
+        bootcamp.subscribe(dev);
+
+        final String expectedSubscribedDevs = dev.toString();
+        final String actualSubscribedDevs = bootcamp.subscribedDevs();
+        assertEquals(expectedSubscribedDevs, actualSubscribedDevs);
+
+        final double actualXpAwarded = bootcamp.xpAwarded();
+        final double expectedXpAwarded = contents.size() * 10 * DEFAULT_XP;
+        assertEquals(expectedXpAwarded, actualXpAwarded);
+
+        dev.nextContent().ifPresent(dev::completeContent);
+        final double expectedDevXpAfterCourse = course.xpAwarded();
+        final double actualDevXpAfterCourse = dev.getXp();
+        assertEquals(expectedDevXpAfterCourse, actualDevXpAfterCourse);
+
+        dev.nextContent().ifPresent(dev::completeContent);
+        final double expectedDevXpAfterMentorship = course.xpAwarded() + mentorship.xpAwarded();
+        final double actualDevXpAfterMentorship = dev.getXp();
+        assertEquals(expectedDevXpAfterMentorship, actualDevXpAfterMentorship);
+
+        dev.nextContent().ifPresent(dev::completeContent);
+        final double expectedDevXpAfterBootcampComplete = course.xpAwarded() + mentorship.xpAwarded() + bootcamp.xpAwarded();
+        final double actualDevXpAfterBootcampComplete = dev.getXp();
+        assertEquals(expectedDevXpAfterBootcampComplete, actualDevXpAfterBootcampComplete);
+
+        final Content contentEmpty = dev.nextContent().orElse(null);
+        assertNull(contentEmpty);
     }
 }
